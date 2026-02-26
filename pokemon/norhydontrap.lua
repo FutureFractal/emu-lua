@@ -43,4 +43,4 @@ end
 
 emu:setBreakpoint(onRhydonTrap,  init[1])
 emu:setBreakpoint(onPaletteTrap, init[2], 0x1C)
-console:log("No more Rhydon trap")
+console:log("Rhydon trap is gone")

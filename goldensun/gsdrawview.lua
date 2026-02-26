@@ -3,7 +3,7 @@
 --[[
 	This script displays a wireframe overlay over any 2D and 3D effects in battle animations,
 	as well as displaying stats about what's being rendered.
-	This supports every language version of both GBA Golden Sun games.
+	This supports all versions of both GBA Golden Sun games.
 
   BUGS:
     - Overlay is often 1 frame ahead of actual game (only in real time, emulator frame advance is fine)
@@ -20,6 +20,7 @@ gsdrawview = {
 	color2D   = 0x00FFFF, -- 2D outline color
 	color3D   = 0xFF00FF, -- 3D outline color
 	full      = false,    -- Draw on top of the in-game HUD
+	cull      = true,     -- Skip drawing culled triangles
 	dynamicbp = true      -- create breakpoints dynamically (needed for Draw2D)
 }
 
@@ -130,7 +131,7 @@ end
 
 local function onDraw2D(mode)
 	-- ignore Draw2D calls that don't draw directly into the renderbuffer
-	if emu:readRegister('r1') ~= emu:read32(p_renderbuf) then return end
+	if emu:readRegister('r0') ~= emu:read32(p_renderbuf) then return end
 
 	local sp     = emu:readRegister('sp')
 	local x      = emu:readRegister('r2')
@@ -197,7 +198,7 @@ local function onDraw3D()
 		-- triangle struct length (UVs or no UVs)
 		local step = (mode >= 4 and mode <= 10) and 12 or 4
 
-		local cull  = emu:read32(cmds + 0x4) & 3
+		local cull  = gsdrawview.cull and emu:read32(cmds + 0x4) & 3 or 0
 		local tris  = emu:read32(cmds + 0x8)
 		local verts = emu:read32(cmds + 0xC)
 
