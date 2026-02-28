@@ -181,7 +181,7 @@ local function hookGlobalDraw2DFunc(addr)
 	if not gsdrawview.dynamicbp then return end
 	addr = emu:read32(addr)
 	if addr ~= 0 and bps[addr] == nil then
-		-- unfortunately we can't trivially recover the mode parameters for an existing function but whatever
+		-- unfortunately we can't trivially recover the mode parameters for an existing function... whatever
 		bps[addr] = emu:setBreakpoint((function() onDraw2D(0) end), addr)
 	end
 end
