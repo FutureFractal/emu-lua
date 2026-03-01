@@ -313,7 +313,7 @@ local function onBlit(bg1, yoff)
 				if bgpa ~= 0 then
 					local bgx = io:read32(0x04000028) >> 8; bgx = ((bgx & 0x7FFFFF) - (bgx & 0x800000))
 					local bgy = io:read32(0x0400002C) >> 8; bgy = ((bgy & 0x7FFFFF) - (bgy & 0x800000))
-					drawOverlay(bgx, bgy, bgpa)
+					drawOverlay(bgx, bgy + yoff, bgpa)
 				end
 			end
 		else
@@ -328,6 +328,9 @@ local function onBlitBG()
 end
 local function onBlitBG1()
 	onBlit(true, 0)
+end
+local function onBlitLuckyWheels()
+	onBlit(false, -16)
 end
 
 local function onAnimStartEnd()
@@ -389,4 +392,7 @@ if not gs1 then
 	emu:setBreakpoint(onBlitBG1, 0x814332E)       -- Task_BlitAnimBG1
 	emu:setBreakpoint(onDraw3D,  0x8196A7C + off) -- Draw3D
 end
+off = ({J=-0x9008,E=0,D=0xE00,F=0x2800,I=0,S=0x2800})[lang]
+emu:setBreakpoint(onBlitLuckyWheels, gs1 and 0x80F6114 + off or 0x81B2130) -- Task_BlitLuckyWheelsAnim
+
 callbacks:add("frame", onFrame)
