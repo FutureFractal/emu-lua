@@ -1,4 +1,8 @@
 -- g1glitchmapfix.lua (for mGBA)
+-- by FutureFractal
+--[[
+	This script prevents glitch maps in Gen 1 Pokémon from crashing the game.
+]]
 
 local p_mapinfo
 local yellow = emu:getGameTitle():sub(1,11) == "POKEMON YEL"
